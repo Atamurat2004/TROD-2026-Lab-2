@@ -121,3 +121,53 @@ def test_liveness_endpoint():
         response = client.get("/health/live")
         assert response.status_code == 200
         assert response.json() == {"status": "ok"}
+
+
+def test_home_and_readiness() -> None:
+    from unittest.mock import patch
+
+    from src.main import database
+
+    with TestClient(app) as client:
+        home = client.get("/")
+        assert home.status_code == 200
+        assert "Sports Store" in home.text
+
+    with patch.object(database, "ping", return_value=True):
+        with TestClient(app) as client:
+            assert client.get("/health/ready").json() == {"status": "ok"}
+
+    with patch.object(database, "ping", return_value=False):
+        with TestClient(app) as client:
+            assert client.get("/health/ready").json() == {"status": "degraded"}
+
+
+def test_products_and_replace_flow() -> None:
+    service = InMemoryService()
+    app.dependency_overrides[get_task_service] = lambda: service
+
+    with TestClient(app) as client:
+        created = client.post(
+            "/products",
+            json={"title": "Racket", "description": "Tennis", "priority": 2, "status": "todo"},
+        )
+        assert created.status_code == 201
+        product_id = created.json()["id"]
+
+        replaced = client.put(
+            f"/products/{product_id}",
+            json={
+                "title": "Pro Racket",
+                "description": "Tennis pro",
+                "priority": 1,
+                "status": "done",
+            },
+        )
+        assert replaced.status_code == 200
+        assert replaced.json()["title"] == "Pro Racket"
+
+        listed = client.get("/products?search=Racket")
+        assert listed.status_code == 200
+        assert listed.json()["total"] >= 1
+
+    app.dependency_overrides.clear()

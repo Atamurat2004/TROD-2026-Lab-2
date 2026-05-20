@@ -45,7 +45,10 @@ class RepoStub:
         return self.items.get(task_id)
 
     def delete_task(self, task_id):
-        return task_id in self.items
+        if task_id not in self.items:
+            return False
+        del self.items[task_id]
+        return True
 
 
 def _expect_raises(exc_type, fn):
@@ -78,3 +81,43 @@ def test_service_list():
 def test_service_update_not_found():
     service = TaskService(RepoStub())
     _expect_raises(TaskNotFoundError, lambda: service.update_task(999, TaskUpdate(title="x")))
+
+
+def test_service_replace_and_delete_success() -> None:
+    service = TaskService(RepoStub())
+    from src.schemas import TaskReplace, TaskStatus
+
+    replaced = service.replace_task(
+        1,
+        TaskReplace(title="R", description=None, priority=2, status=TaskStatus.done),
+    )
+    assert replaced.id == 1
+
+    service.delete_task(1)
+    _expect_raises(TaskNotFoundError, lambda: service.delete_task(1))
+
+
+def test_service_replace_and_update_not_found() -> None:
+    service = TaskService(RepoStub())
+
+    class EmptyRepo(RepoStub):
+        def replace_task(self, task_id, _payload):
+            return None
+
+        def update_task(self, task_id, _payload):
+            return None
+
+        def delete_task(self, task_id):
+            return False
+
+    broken = TaskService(EmptyRepo())
+    from src.schemas import TaskReplace, TaskStatus
+
+    _expect_raises(
+        TaskNotFoundError,
+        lambda: broken.replace_task(
+            1, TaskReplace(title="x", description=None, priority=1, status=TaskStatus.todo)
+        ),
+    )
+    _expect_raises(TaskNotFoundError, lambda: broken.update_task(1, TaskUpdate(title="y")))
+    _expect_raises(TaskNotFoundError, lambda: broken.delete_task(1))
