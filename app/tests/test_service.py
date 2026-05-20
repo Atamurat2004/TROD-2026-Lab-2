@@ -98,8 +98,6 @@ def test_service_replace_and_delete_success() -> None:
 
 
 def test_service_replace_and_update_not_found() -> None:
-    service = TaskService(RepoStub())
-
     class EmptyRepo(RepoStub):
         def replace_task(self, task_id, _payload):
             return None
@@ -115,9 +113,7 @@ def test_service_replace_and_update_not_found() -> None:
 
     _expect_raises(
         TaskNotFoundError,
-        lambda: broken.replace_task(
-            1, TaskReplace(title="x", description=None, priority=1, status=TaskStatus.todo)
-        ),
+        lambda: broken.replace_task(1, TaskReplace(title="x", description=None, priority=1, status=TaskStatus.todo)),
     )
     _expect_raises(TaskNotFoundError, lambda: broken.update_task(1, TaskUpdate(title="y")))
     _expect_raises(TaskNotFoundError, lambda: broken.delete_task(1))
