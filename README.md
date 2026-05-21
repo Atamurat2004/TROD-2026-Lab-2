@@ -11,15 +11,14 @@
 ├── app/
 ├── db/
 ├── nginx/
-├── ci/                          # дубликаты шаблонов (опционально)
-├── .github/workflows/ci.yml     # GitHub Actions
-├── .gitlab-ci.yml               # GitLab CI
+├── ci/                          # копия workflow (опционально)
+├── .github/workflows/ci.yml     # GitHub Actions (CI)
 ├── docker-compose.yml
 ├── .env.example
 └── README.md
 ```
 
-**CI/CD:** `.github/workflows/ci.yml`, `.gitlab-ci.yml` уже лежат здесь. Секреты: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.
+**CI/CD:** `.github/workflows/ci.yml`. Секреты в GitHub: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.
 
 ## Быстрый старт
 

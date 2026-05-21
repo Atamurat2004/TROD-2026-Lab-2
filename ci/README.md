@@ -1,14 +1,12 @@
-# CI/CD
+# CI/CD (GitHub Actions)
 
-Пайплайны для **отдельного** репозитория уже в корне `lab-2/`:
+Пайплайн в корне репозитория:
 
-- `.github/workflows/ci.yml` — GitHub Actions
-- `.gitlab-ci.yml` — GitLab CI
-
-Каталог `ci/` — те же файлы (резервная копия шаблонов).
+- `.github/workflows/ci.yml` — рабочий workflow
+- `github-ci.yml` — копия того же файла (резерв)
 
 Настройки lint/test: `app/pyproject.toml`, `app/requirements-dev.txt`.
 
-Секреты: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.
+Секреты в GitHub → Settings → Secrets: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.
 
-Демо упавших пайплайнов (в монорепо `TROD-2026`): ветки `demo/ci-fail-lint`, `demo/ci-fail-coverage`.
+Демо упавших пайплайнов (монорепо `TROD-2026`): ветки `demo/ci-fail-lint`, `demo/ci-fail-coverage`.
