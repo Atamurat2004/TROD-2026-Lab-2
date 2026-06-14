@@ -12,7 +12,7 @@ on:
       - master
 
 env:
-  DOCKER_IMAGE_LOCAL: lab1-app
+  DOCKER_IMAGE_LOCAL: lab2-app
   PYTHON_VERSION: "3.12"
 
 jobs:
@@ -138,7 +138,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Load and push
         run: |
-          NAME="${IMAGE_NAME:-lab1-app}"
+          NAME="${IMAGE_NAME:-lab2-app}"
           docker load -i image.tar
           SHORT_SHA="${GITHUB_SHA:0:7}"
           REF_SLUG="${GITHUB_REF_NAME//\//-}"

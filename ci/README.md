@@ -7,6 +7,4 @@
 
 Настройки lint/test: `app/pyproject.toml`, `app/requirements-dev.txt`.
 
-Секреты в GitHub → Settings → Secrets: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.
-
-Демо упавших пайплайнов (монорепо `TROD-2026`): ветки `demo/ci-fail-lint`, `demo/ci-fail-coverage`.
+Секреты в GitHub → Settings → Secrets: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`. Образ на Docker Hub: `username/lab2-app` (переопределить: Variables → `DOCKER_IMAGE_NAME`).
