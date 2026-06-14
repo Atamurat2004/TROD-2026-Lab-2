@@ -3,7 +3,7 @@ services:
     build:
       context: ./app
       pull: false
-    container_name: lab1-web
+    container_name: lab2-web
     depends_on:
       db:
         condition: service_healthy
@@ -22,13 +22,13 @@ services:
       retries: 5
     restart: unless-stopped
     networks:
-      - lab1-network
+      - lab2-network
 
   nginx:
     build:
       context: ./nginx
       pull: false
-    container_name: lab1-nginx
+    container_name: lab2-nginx
     depends_on:
       web:
         condition: service_healthy
@@ -41,13 +41,13 @@ services:
       retries: 5
     restart: unless-stopped
     networks:
-      - lab1-network
+      - lab2-network
 
   db:
     build:
       context: ./db
       pull: false
-    container_name: lab1-db
+    container_name: lab2-db
     environment:
       POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB is required}
       POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is required}
@@ -61,11 +61,11 @@ services:
       retries: 10
     restart: unless-stopped
     networks:
-      - lab1-network
+      - lab2-network
 
 volumes:
   postgres_data:
 
 networks:
-  lab1-network:
+  lab2-network:
     driver: bridge
