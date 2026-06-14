@@ -34,6 +34,24 @@ Copy-Item .env.example .env
 docker compose up --build
 ```
 
+Если ошибка `auth.docker.io ... TLS handshake timeout` (нестабильная сеть до Docker Hub):
+
+```powershell
+# 1) Скачать базовые образы, когда интернет стабилен
+.\scripts\pull-base-images.ps1
+
+# 2) В .env должно быть COMPOSE_BAKE=false (см. .env.example)
+
+# 3) Сборка без повторной загрузки базовых образов
+docker compose build --pull=false
+docker compose up -d
+
+# Запасной вариант (классический builder)
+$env:DOCKER_BUILDKIT = "0"
+docker compose build --pull=false
+docker compose up -d
+```
+
 3) Открой (весь HTTP идёт через **nginx**, приложение снаружи не слушает порт `8000`):
 
 - Web UI: `http://localhost:8080/`

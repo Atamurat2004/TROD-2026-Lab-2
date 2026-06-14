@@ -2,6 +2,7 @@ services:
   web:
     build:
       context: ./app
+      pull: false
     container_name: lab1-web
     depends_on:
       db:
@@ -26,6 +27,7 @@ services:
   nginx:
     build:
       context: ./nginx
+      pull: false
     container_name: lab1-nginx
     depends_on:
       web:
@@ -44,6 +46,7 @@ services:
   db:
     build:
       context: ./db
+      pull: false
     container_name: lab1-db
     environment:
       POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB is required}
